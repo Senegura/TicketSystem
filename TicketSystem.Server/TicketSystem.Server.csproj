@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TicketSystem.BL\TicketSystem.BL.csproj" />
     <ProjectReference Include="..\ticketsystem.client\ticketsystem.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

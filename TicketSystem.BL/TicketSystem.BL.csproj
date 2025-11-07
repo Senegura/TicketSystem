@@ -10,4 +10,9 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TicketSystem.DAL\TicketSystem.DAL.csproj" />
+    <ProjectReference Include="..\TicketSystem.Models\TicketSystem.Models.csproj" />
+  </ItemGroup>
+
 </Project>
