@@ -1,0 +1,62 @@
+[
+  {
+    "id": "b2a1f7c0-2a93-4d8f-a23e-9b1a24dcf5a1",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "description": "My laptop overheats and shuts down after 10 minutes of use. This started happening about a week ago. I've tried cleaning the vents but the problem persists.",
+    "summary": "Laptop overheating and unexpected shutdown.",
+    "imageUrl": "uploads/laptop_issue.jpg",
+    "status": "new",
+    "resolution": "",
+    "createdAt": "2025-10-27T14:35:00Z",
+    "updatedAt": "2025-10-27T14:35:00Z"
+  },
+  {
+    "id": "c3b2e8d1-3b04-5e9f-b34f-0c2b35edf6b2",
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "description": "Unable to connect to the company VPN. I get an error message saying 'Connection timeout' every time I try to connect from home.",
+    "summary": "VPN connection timeout error.",
+    "imageUrl": "uploads/vpn_error.png",
+    "status": "inProgress",
+    "resolution": "",
+    "createdAt": "2025-10-26T09:15:00Z",
+    "updatedAt": "2025-10-27T10:20:00Z"
+  },
+  {
+    "id": "d4c3f9e2-4c15-6f0g-c45g-1d3c46feg7c3",
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "description": "My email client keeps crashing when I try to open attachments larger than 5MB. This is affecting my ability to review important documents.",
+    "summary": "Email client crashes with large attachments.",
+    "imageUrl": "uploads/email_crash.jpg",
+    "status": "resolved",
+    "resolution": "Updated email client to latest version and increased attachment size limit in settings.",
+    "createdAt": "2025-10-25T11:45:00Z",
+    "updatedAt": "2025-10-26T16:30:00Z"
+  },
+  {
+    "id": "e5d4g0f3-5d26-7g1h-d56h-2e4d57gfh8d4",
+    "name": "Alice Williams",
+    "email": "alice.williams@example.com",
+    "description": "Printer in the 3rd floor office is not responding. The display shows 'Paper Jam' but there is no paper stuck inside.",
+    "summary": "Printer showing false paper jam error.",
+    "imageUrl": "uploads/printer_error.jpg",
+    "status": "closed",
+    "resolution": "Reset printer sensors and performed firmware update. Issue resolved.",
+    "createdAt": "2025-10-24T13:20:00Z",
+    "updatedAt": "2025-10-25T08:45:00Z"
+  },
+  {
+    "id": "f6e5h1g4-6e37-8h2i-e67i-3f5e68hgi9e5",
+    "name": "Charlie Brown",
+    "email": "charlie.brown@example.com",
+    "description": "Cannot access the shared network drive. I get 'Access Denied' error even though I had access yesterday. Need urgent access to project files.",
+    "summary": "Network drive access denied error.",
+    "imageUrl": "uploads/network_drive.png",
+    "status": "new",
+    "resolution": "",
+    "createdAt": "2025-10-27T15:50:00Z",
+    "updatedAt": "2025-10-27T15:50:00Z"
+  }
+]

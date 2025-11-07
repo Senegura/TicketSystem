@@ -20,6 +20,7 @@
     <ProjectReference Include="..\ticketsystem.client\ticketsystem.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\TicketSystem.DAL\TicketSystem.DAL.csproj" />
   </ItemGroup>
 
 </Project>
