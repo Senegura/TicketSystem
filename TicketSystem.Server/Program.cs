@@ -1,3 +1,4 @@
+using TicketSystem.BL;
 using TicketSystem.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register CryptoService as singleton
+builder.Services.AddSingleton<ICryptoService, CryptoService>();
 
 // Register TicketDal with configured file path
 var ticketFilePath = builder.Configuration["TicketStorage:FilePath"] ?? "App_Data/tickets.json";

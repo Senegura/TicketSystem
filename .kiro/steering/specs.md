@@ -9,3 +9,11 @@ When creating implementation plans (tasks.md) for specs:
 - Focus on core functionality implementation first
 
 This preference applies to all spec workflows unless explicitly overridden by the user for a specific spec.
+
+## Design Document Configuration
+
+When creating design documents (design.md) for specs:
+- NEVER include a "Testing Strategy" section
+- Do not include any unit test planning or test-related sections
+- Focus only on architecture, components, data models, error handling, and implementation notes
+- This project does not require unit tests

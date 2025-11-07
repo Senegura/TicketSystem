@@ -37,6 +37,10 @@
 
 
 
+
+
+
+
 - [ ] 4. Implement SignToken method
 
   - Convert secret key to byte array and create SymmetricSecurityKey
