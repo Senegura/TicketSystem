@@ -74,8 +74,10 @@ const Login: React.FC = () => {
             navigate('/create-ticket');
             break;
           case 'User':
-          case 'Admin':
             navigate('/tickets');
+            break;
+          case 'Admin':
+            navigate('/admin');
             break;
           default:
             setError('Unknown user type');
