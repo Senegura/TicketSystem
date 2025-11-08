@@ -103,6 +103,10 @@ const Login: React.FC = () => {
     navigate('/register');
   };
 
+  const handleNewTicketClick = () => {
+    navigate('/new-ticket');
+  };
+
   return (
     <div className="login-container">
       <div className="login-wrapper">
@@ -155,6 +159,16 @@ const Login: React.FC = () => {
                   onClick={handleRegisterClick}
                 >
                   Register
+                </button>
+              </div>
+              <div className="new-ticket-link-container text-center mt-3">
+                <span>Need to submit a ticket? </span>
+                <button
+                  type="button"
+                  className="new-ticket-link"
+                  onClick={handleNewTicketClick}
+                >
+                  Create Ticket
                 </button>
               </div>
         </div>

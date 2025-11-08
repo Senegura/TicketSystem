@@ -1,11 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
+import NewTicket from './components/NewTicket';
 import './App.css';
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/new-ticket" element={<NewTicket />} />
             <Route path="/register" element={
                 <div className="container mt-5">
                     <div className="text-center">

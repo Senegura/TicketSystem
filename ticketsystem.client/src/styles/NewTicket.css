@@ -6,8 +6,8 @@ body,
   padding: 0;
 }
 
-/* Login Container */
-.login-container {
+/* NewTicket Container */
+.new-ticket-container {
   background-color: #f5f5f5;
   min-height: 100vh;
   display: flex;
@@ -16,14 +16,14 @@ body,
   padding: 2rem;
 }
 
-/* Login Wrapper */
-.login-wrapper {
+/* NewTicket Wrapper */
+.new-ticket-wrapper {
   width: 100%;
   max-width: 1400px;
 }
 
-/* Login Card */
-.login-card {
+/* NewTicket Card */
+.new-ticket-card {
   background-color: #ffffff;
   padding: 4rem;
   border-radius: 16px;
@@ -32,8 +32,8 @@ body,
   margin: 0 auto;
 }
 
-/* Login Heading */
-.login-heading {
+/* NewTicket Heading */
+.new-ticket-heading {
   font-size: 56px;
   font-weight: bold;
   color: #333333;
@@ -41,7 +41,7 @@ body,
 }
 
 /* Form Labels */
-.login-card .form-label {
+.new-ticket-card .form-label {
   font-size: 20px;
   font-weight: normal;
   color: #333333;
@@ -51,7 +51,7 @@ body,
 }
 
 /* Input Fields */
-.login-card .form-control {
+.new-ticket-card .form-control {
   border-radius: 10px;
   border: 1px solid #cccccc;
   padding: 0.625rem 1rem;
@@ -60,13 +60,30 @@ body,
   min-height: 44px;
 }
 
-.login-card .form-control:focus {
+.new-ticket-card .form-control:focus {
   border-color: #F5B5A8;
   box-shadow: 0 0 0 0.2rem rgba(245, 181, 168, 0.25);
 }
 
-/* Login Button */
-.login-button {
+/* Textarea Styling */
+.new-ticket-card textarea.form-control {
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  padding: 0.625rem 1rem;
+  font-size: 18px;
+  color: #333333;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.new-ticket-card textarea.form-control:focus {
+  border-color: #F5B5A8;
+  box-shadow: 0 0 0 0.2rem rgba(245, 181, 168, 0.25);
+}
+
+/* NewTicket Button */
+.new-ticket-button {
   background-color: #F5B5A8;
   color: #ffffff;
   border: none;
@@ -80,22 +97,27 @@ body,
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.new-ticket-button:hover {
   background-color: #f3a091;
 }
 
-.login-button:active {
+.new-ticket-button:active {
   background-color: #f18b78;
 }
 
-/* Register Link Container */
-.register-link-container {
+.new-ticket-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Back to Login Link Container */
+.back-to-login-container {
   font-size: 18px;
   color: #333333;
 }
 
-/* Register Link */
-.register-link {
+/* Back to Login Link */
+.back-to-login-link {
   color: #F5B5A8;
   text-decoration: none;
   background: none;
@@ -109,106 +131,87 @@ body,
   align-items: center;
 }
 
-.register-link:hover {
-  color: #f3a091;
-  text-decoration: underline;
-}
-
-/* New Ticket Link Container */
-.new-ticket-link-container {
-  font-size: 18px;
-  color: #333333;
-}
-
-/* New Ticket Link */
-.new-ticket-link {
-  color: #F5B5A8;
-  text-decoration: none;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 18px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  min-height: 56px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.new-ticket-link:hover {
+.back-to-login-link:hover {
   color: #f3a091;
   text-decoration: underline;
 }
 
 /* Large Screen Enhancements */
 @media (min-width: 1400px) {
-  .login-card {
+  .new-ticket-card {
     padding: 5rem 6rem;
   }
 
-  .login-heading {
+  .new-ticket-heading {
     font-size: 64px;
     margin-bottom: 3rem;
   }
 
-  .login-card .form-label {
+  .new-ticket-card .form-label {
     font-size: 22px;
   }
 
-  .login-card .form-control {
+  .new-ticket-card .form-control {
     font-size: 20px;
     padding: 0.75rem 1.25rem;
     min-height: 48px;
   }
 
-  .login-button {
+  .new-ticket-card textarea.form-control {
+    font-size: 20px;
+    padding: 0.75rem 1.25rem;
+    min-height: 140px;
+  }
+
+  .new-ticket-button {
     font-size: 22px;
     padding: 1.25rem 1.5rem;
     min-height: 64px;
   }
 
-  .register-link-container {
+  .back-to-login-container {
     font-size: 20px;
   }
 
-  .register-link {
-    font-size: 20px;
-  }
-
-  .new-ticket-link-container {
-    font-size: 20px;
-  }
-
-  .new-ticket-link {
+  .back-to-login-link {
     font-size: 20px;
   }
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 576px) {
-  .login-card {
+  .new-ticket-card {
     padding: 1.5rem;
   }
 
-  .login-heading {
+  .new-ticket-heading {
     font-size: 36px;
   }
 
-  .login-card .form-control {
+  .new-ticket-card .form-control {
     font-size: 16px; /* Minimum 16px to prevent zoom on iOS */
   }
 
-  .login-button {
+  .new-ticket-card textarea.form-control {
+    font-size: 16px;
+    min-height: 100px;
+  }
+
+  .new-ticket-button {
     font-size: 16px;
   }
 }
 
 /* Ensure touch targets are at least 44x44px on all devices */
-.login-card .form-control {
+.new-ticket-card .form-control {
   min-height: 44px;
 }
 
-.login-button,
-.register-link {
+.new-ticket-card textarea.form-control {
+  min-height: 100px;
+}
+
+.new-ticket-button,
+.back-to-login-link {
   min-height: 56px;
 }
