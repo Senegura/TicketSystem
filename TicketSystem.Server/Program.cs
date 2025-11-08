@@ -15,7 +15,14 @@ builder.Services.AddSingleton<ICryptoService, CryptoService>();
 
 // Register TicketDal with configured file path
 var ticketFilePath = builder.Configuration["TicketStorage:FilePath"] ?? "App_Data/tickets.json";
-builder.Services.AddScoped<ITicketDal>(sp => new TicketDal(ticketFilePath));
+builder.Services.AddSingleton<ITicketDal>(sp => new TicketDal(ticketFilePath));
+
+// Register UserDal with configured database path
+var userDbPath = builder.Configuration["UserStorage:DatabasePath"] ?? "App_Data/users.db";
+builder.Services.AddSingleton<IUserDal>(sp => new UserDal(userDbPath));
+
+// Register UserService
+builder.Services.AddSingleton<IUserService, UserService>();
 
 var app = builder.Build();
 

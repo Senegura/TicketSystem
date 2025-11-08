@@ -47,6 +47,12 @@ public interface IUserService
     /// <param name="login">The user login credentials.</param>
     /// <returns>True if authentication succeeds; false otherwise.</returns>
     Task<bool> LoginAsync(UserLogin login);
+    
+    /// <summary>
+    /// Seeds initial test user accounts for development and testing.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task SeedInitialData();
 }
 ```
 
@@ -68,6 +74,7 @@ public UserService(IUserDal userDal, ICryptoService cryptoService)
 **Key Methods:**
 - `RegisterAsync`: Handles new user registration with secure password hashing
 - `LoginAsync`: Validates user credentials against stored hash
+- `SeedInitialData`: Creates predefined test user accounts for development/testing
 
 ## Data Models
 
@@ -186,6 +193,21 @@ CryptoService -> UserService: string calculatedHash
 UserService: Compare calculatedHash with storedPasswordHash
 UserService: Return true/false
 ```
+
+## Seed Data Flow
+
+### SeedInitialData Method Logic
+
+1. **Create Test Users**: For each predefined user (customer, user, admin):
+   - Create a UserRegistration object with username, password, and appropriate UserType
+   - Call `RegisterAsync()` to create the user with secure password hashing
+2. **Predefined Accounts**:
+   - Username: "customer@gmail.com", Password: "customer", UserType: Customer
+   - Username: "user@gmail.com", Password: "user", UserType: User
+   - Username: "admin@gmail.com", Password: "admin", UserType: Admin
+3. **Reuse Registration Logic**: Leverages existing RegisterAsync method to ensure consistent password hashing
+
+This method is intended for development and testing environments only and should not be called in production.
 
 ## Error Handling
 

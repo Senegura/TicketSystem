@@ -41,3 +41,15 @@ The User Service is a business logic component that manages user authentication 
 3. WHEN the calculated hash matches the stored PasswordHash, THE UserService SHALL return true
 4. WHEN the calculated hash does not match the stored PasswordHash, THE UserService SHALL return false
 5. WHEN the user is not found in the database, THE UserService SHALL return false
+
+### Requirement 3
+
+**User Story:** As a system administrator, I want to seed initial test users into the system, so that I can quickly set up a development or testing environment with predefined user accounts
+
+#### Acceptance Criteria
+
+1. THE UserService SHALL provide a SeedInitialData method that creates predefined user accounts
+2. WHEN SeedInitialData is invoked, THE UserService SHALL create a user with username "customer@gmail.com" and password "customer"
+3. WHEN SeedInitialData is invoked, THE UserService SHALL create a user with username "user@gmail.com" and password "user"
+4. WHEN SeedInitialData is invoked, THE UserService SHALL create a user with username "admin@gmail.com" and password "admin"
+5. WHEN creating each seeded user, THE UserService SHALL use the same secure password hashing process as the registration method

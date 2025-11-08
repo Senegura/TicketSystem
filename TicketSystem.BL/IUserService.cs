@@ -20,4 +20,11 @@ public interface IUserService
     /// <param name="login">The user login credentials containing username and password.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is true if authentication succeeds; false otherwise.</returns>
     Task<bool> LoginAsync(UserLogin login);
+
+    /// <summary>
+    /// Seeds initial test user accounts for development and testing environments.
+    /// Creates predefined users: customer, user, and admin with default passwords.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task SeedInitialData();
 }

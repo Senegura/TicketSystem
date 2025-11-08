@@ -90,4 +90,36 @@ public class UserService : IUserService
         // Compare calculated hash with stored hash
         return calculatedHash == user.PasswordHash;
     }
+
+    /// <summary>
+    /// Seeds initial test user accounts for development and testing environments.
+    /// Creates three predefined users with default credentials.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task SeedInitialData()
+    {
+        // Create customer user
+        await RegisterAsync(new UserRegistration
+        {
+            Username = "customer@gmail.com",
+            Password = "customer",
+            UserType = UserType.Customer
+        });
+
+        // Create regular user
+        await RegisterAsync(new UserRegistration
+        {
+            Username = "user@gmail.com",
+            Password = "user",
+            UserType = UserType.User
+        });
+
+        // Create admin user
+        await RegisterAsync(new UserRegistration
+        {
+            Username = "admin@gmail.com",
+            Password = "admin",
+            UserType = UserType.Admin
+        });
+    }
 }
