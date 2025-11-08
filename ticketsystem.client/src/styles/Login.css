@@ -43,18 +43,21 @@ body,
 /* Form Labels */
 .login-card .form-label {
   font-size: 20px;
+  font-weight: normal;
   color: #333333;
   margin-bottom: 0.75rem;
+  text-align: left;
+  display: block;
 }
 
 /* Input Fields */
 .login-card .form-control {
   border-radius: 10px;
   border: 1px solid #cccccc;
-  padding: 1rem 1.25rem;
+  padding: 0.625rem 1rem;
   font-size: 18px;
   color: #333333;
-  min-height: 56px;
+  min-height: 44px;
 }
 
 .login-card .form-control:focus {
@@ -128,8 +131,8 @@ body,
 
   .login-card .form-control {
     font-size: 20px;
-    padding: 1.25rem 1.5rem;
-    min-height: 64px;
+    padding: 0.75rem 1.25rem;
+    min-height: 48px;
   }
 
   .login-button {
@@ -167,7 +170,10 @@ body,
 }
 
 /* Ensure touch targets are at least 44x44px on all devices */
-.login-card .form-control,
+.login-card .form-control {
+  min-height: 44px;
+}
+
 .login-button,
 .register-link {
   min-height: 56px;
