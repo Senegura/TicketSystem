@@ -18,8 +18,8 @@ public interface IUserService
     /// Authenticates a user with username and password.
     /// </summary>
     /// <param name="login">The user login credentials containing username and password.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result is true if authentication succeeds; false otherwise.</returns>
-    Task<bool> LoginAsync(UserLogin login);
+    /// <returns>A task that represents the asynchronous operation. The task result contains a LoginResult with success status, error message, user id, and user type.</returns>
+    Task<LoginResult> LoginAsync(UserLogin login);
 
     /// <summary>
     /// Seeds initial test user accounts for development and testing environments.

@@ -45,8 +45,8 @@ public interface IUserService
     /// Authenticates a user with username and password.
     /// </summary>
     /// <param name="login">The user login credentials.</param>
-    /// <returns>True if authentication succeeds; false otherwise.</returns>
-    Task<bool> LoginAsync(UserLogin login);
+    /// <returns>A LoginResult containing success status, error message, user id, and user type.</returns>
+    Task<LoginResult> LoginAsync(UserLogin login);
     
     /// <summary>
     /// Seeds initial test user accounts for development and testing.
@@ -127,6 +127,38 @@ public class UserLogin
 }
 ```
 
+### LoginResult Model
+
+```csharp
+namespace TicketSystem.Models;
+
+/// <summary>
+/// Represents the result of a login authentication attempt.
+/// </summary>
+public class LoginResult
+{
+    /// <summary>
+    /// Gets or sets whether the authentication was successful.
+    /// </summary>
+    public bool Success { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the error message if authentication failed.
+    /// </summary>
+    public string ErrorMessage { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Gets or sets the authenticated user's ID.
+    /// </summary>
+    public int UserId { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the authenticated user's type.
+    /// </summary>
+    public UserType UserType { get; set; }
+}
+```
+
 ## Registration Flow
 
 ### RegisterAsync Method Logic
@@ -167,7 +199,7 @@ UserDal -> UserService: User
 ### LoginAsync Method Logic
 
 1. **Retrieve User**: Call `_userDal.GetByUsernameAsync()` to fetch the user record
-2. **Check User Exists**: If user is null, return false immediately
+2. **Check User Exists**: If user is null, return LoginResult with Success=false, ErrorMessage="Invalid username or password", UserId=0, UserType=default
 3. **Parse Salt**: Convert the stored Salt string (Base64) back to byte array
 4. **Parse Algorithm**: Convert the stored HashAlgorithm string to HashAlgorithmName
 5. **Calculate Hash**: Call `_cryptoService.HashPassword()` with:
@@ -176,7 +208,9 @@ UserDal -> UserService: User
    - The stored Iterations value
    - The parsed HashAlgorithm value
 6. **Compare Hashes**: Compare the calculated hash with the stored PasswordHash
-7. **Return Result**: Return true if hashes match, false otherwise
+7. **Return Result**: 
+   - If hashes match: Return LoginResult with Success=true, ErrorMessage="", UserId=user.Id, UserType=user.UserType
+   - If hashes don't match: Return LoginResult with Success=false, ErrorMessage="Invalid username or password", UserId=0, UserType=default
 
 ### Login Sequence Diagram
 
@@ -191,7 +225,7 @@ UserService -> CryptoService: HashPassword(password, storedSalt, storedIteration
 CryptoService -> UserService: string calculatedHash
 
 UserService: Compare calculatedHash with storedPasswordHash
-UserService: Return true/false
+UserService: Return LoginResult (success, errorMessage, userId, userType)
 ```
 
 ## Seed Data Flow
@@ -229,11 +263,11 @@ This method is intended for development and testing environments only and should
 ### Login Errors
 
 **User Not Found:**
-- Return false (not an exception)
+- Return LoginResult with Success=false and ErrorMessage="Invalid username or password" (not an exception)
 - Caller should treat as authentication failure
 
 **Invalid Password:**
-- Return false (not an exception)
+- Return LoginResult with Success=false and ErrorMessage="Invalid username or password" (not an exception)
 - Caller should treat as authentication failure
 
 **Database Errors:**
@@ -242,7 +276,7 @@ This method is intended for development and testing environments only and should
 
 ### Security Considerations for Error Handling
 
-- **Don't reveal user existence**: Return false for both "user not found" and "invalid password"
+- **Don't reveal user existence**: Return same error message "Invalid username or password" for both "user not found" and "invalid password"
 - **Timing attacks**: Consider constant-time comparison for password hashes (future enhancement)
 - **Rate limiting**: Implement at API layer, not in UserService
 
@@ -330,4 +364,3 @@ No additional packages required. Uses existing:
 7. **Password history**: Prevent password reuse
 8. **Audit logging**: Log authentication events for security monitoring
 9. **Constant-time comparison**: Implement timing-attack resistant hash comparison
-10. **Return user on login**: Return User object instead of bool for successful logins

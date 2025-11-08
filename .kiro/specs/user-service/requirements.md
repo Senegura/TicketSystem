@@ -11,6 +11,7 @@ The User Service is a business logic component that manages user authentication 
 - **CryptoService**: The cryptographic service that provides password hashing functionality
 - **UserRegistration**: A data model containing username, password, and UserType for new user registration
 - **UserLogin**: A data model containing username and password for user authentication
+- **LoginResult**: A data model containing authentication result with success status, error message, user id, and user type
 - **PasswordHash**: The cryptographically hashed representation of a user's password
 - **Salt**: A random value used in password hashing to prevent rainbow table attacks
 - **HashAlgorithm**: The cryptographic algorithm identifier used for password hashing (e.g., SHA256, SHA512)
@@ -38,9 +39,9 @@ The User Service is a business logic component that manages user authentication 
 
 1. WHEN a UserLogin model is provided, THE UserService SHALL retrieve the user record including PasswordHash, salt, HashAlgorithm, and iterations from UserDal
 2. WHEN the user record is retrieved, THE UserService SHALL calculate the hash using the provided password, stored salt, stored HashAlgorithm, and stored iterations
-3. WHEN the calculated hash matches the stored PasswordHash, THE UserService SHALL return true
-4. WHEN the calculated hash does not match the stored PasswordHash, THE UserService SHALL return false
-5. WHEN the user is not found in the database, THE UserService SHALL return false
+3. WHEN the calculated hash matches the stored PasswordHash, THE UserService SHALL return a LoginResult with success set to true, empty error message, the user id, and the user type
+4. WHEN the calculated hash does not match the stored PasswordHash, THE UserService SHALL return a LoginResult with success set to false, error message "Invalid username or password", zero user id, and default user type
+5. WHEN the user is not found in the database, THE UserService SHALL return a LoginResult with success set to false, error message "Invalid username or password", zero user id, and default user type
 
 ### Requirement 3
 
