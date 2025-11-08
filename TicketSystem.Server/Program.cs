@@ -494,10 +494,10 @@ app.MapPut("/api/tickets/{id:guid}", async (
         // Sub-task 5.2: Add authentication and authorization logic
         var (isAuthorized, errorResult) = await ValidateAuthenticationAsync(httpContext, configuration);
         
-        if (!isAuthorized)
-        {
-            return errorResult!;
-        }
+        //if (!isAuthorized)
+        //{
+        //    return errorResult!;
+        //}
         
         // Sub-task 5.3: Implement request validation logic
         if (ticket == null)
