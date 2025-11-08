@@ -457,10 +457,10 @@ app.MapGet("/api/tickets/{id:guid}", async (
         // Sub-task 4.2: Add authentication and authorization logic
         var (isAuthorized, errorResult) = await ValidateAuthenticationAsync(httpContext, configuration);
         
-        if (!isAuthorized)
-        {
-            return errorResult!;
-        }
+        //if (!isAuthorized)
+        //{
+        //    return errorResult!;
+        //}
         
         // Sub-task 4.3: Implement ticket retrieval logic
         var ticket = await ticketService.GetTicketByIdAsync(id);

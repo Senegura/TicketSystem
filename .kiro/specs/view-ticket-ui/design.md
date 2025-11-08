@@ -53,6 +53,22 @@ interface ViewTicketState {
 
 **Endpoint:** `GET /api/tickets/{id:guid}`
 
+**Authentication:**
+- The endpoint requires authentication via JWT token stored in HTTP-only cookie named "AuthToken"
+- The browser automatically includes the cookie in requests (credentials: 'include' in fetch options)
+- No manual cookie manipulation is required in JavaScript code
+
+**Request Configuration:**
+```typescript
+fetch(`/api/tickets/${id}`, {
+  method: 'GET',
+  credentials: 'include', // Ensures cookies are sent with the request
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+```
+
 **Response Type:**
 ```typescript
 interface Ticket {
@@ -77,6 +93,8 @@ enum TicketStatus {
 ```
 
 **Error Handling:**
+- 401 Unauthorized: Display "Authentication required" message with link to login
+- 403 Forbidden: Display "Access denied" message
 - 404 Not Found: Display "Ticket not found" message
 - 500 Server Error: Display generic error message
 - Network Error: Display connection error message
@@ -184,22 +202,32 @@ Container (full viewport, centered)
 
 ### Error States
 
-1. **Ticket Not Found (404)**
+1. **Authentication Required (401)**
+   - Display: "Authentication required"
+   - Message: "You must be logged in to view this ticket."
+   - Action: Provide "Go to Login" button/link that navigates to `/login`
+
+2. **Access Denied (403)**
+   - Display: "Access denied"
+   - Message: "You don't have permission to view this ticket."
+   - Action: Provide link back to tickets list or home
+
+3. **Ticket Not Found (404)**
    - Display: "Ticket not found"
    - Message: "The ticket you're looking for doesn't exist or has been removed."
    - Action: Provide link back to tickets list or home
 
-2. **Server Error (500)**
+4. **Server Error (500)**
    - Display: "Unable to load ticket"
    - Message: "An error occurred while loading the ticket. Please try again later."
    - Action: Provide retry button
 
-3. **Network Error**
+5. **Network Error**
    - Display: "Connection error"
    - Message: "Unable to connect to the server. Please check your internet connection."
    - Action: Provide retry button
 
-4. **Invalid Ticket ID Format**
+6. **Invalid Ticket ID Format**
    - Display: "Invalid ticket ID"
    - Message: "The ticket ID format is invalid."
    - Action: Provide link back to tickets list or home
@@ -215,8 +243,16 @@ Container (full viewport, centered)
 ### Technology Stack
 - React 19.1.1 with TypeScript
 - React Router for routing and URL parameter extraction
-- Fetch API for HTTP requests
+- Fetch API for HTTP requests with credentials: 'include' for cookie-based authentication
 - CSS for styling (no CSS-in-JS libraries)
+
+### Authentication Implementation
+- The backend uses JWT tokens stored in HTTP-only cookies (cookie name: "AuthToken")
+- HTTP-only cookies cannot be accessed via JavaScript, providing security against XSS attacks
+- The browser automatically sends cookies with requests when credentials: 'include' is set
+- No manual cookie handling or token storage is required in the frontend code
+- Authentication errors (401) should redirect users to the login page
+- Authorization errors (403) should display an appropriate error message
 
 ### Accessibility Considerations
 - Semantic HTML elements (section, article, header)

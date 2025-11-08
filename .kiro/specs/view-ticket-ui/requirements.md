@@ -15,19 +15,24 @@ This feature provides a dedicated ticket view screen that allows users to view c
 - **Unique Ticket ID**: A distinct identifier (GUID format) used to access and reference a specific ticket
 - **Uploaded Image**: An optional image file attached to the ticket for visual context
 - **Backend API Endpoint**: The server endpoint `/api/tickets/{id:guid}` that retrieves ticket data by GUID
+- **Authentication Token**: A JWT (JSON Web Token) stored in an HTTP-only cookie named "AuthToken" used to authenticate API requests
+- **HTTP-only Cookie**: A secure cookie that cannot be accessed by JavaScript, used to store the authentication token
 
 ## Requirements
 
 ### Requirement 1
 
-**User Story:** As a user, I want to view complete ticket details by accessing a unique ticket ID, so that I can review all information about a specific support request.
+**User Story:** As an authenticated user, I want to view complete ticket details by accessing a unique ticket ID, so that I can review all information about a specific support request.
 
 #### Acceptance Criteria
 
-1. WHEN a user navigates to a ticket view URL with a valid ticket ID, THE Ticket System SHALL display the ticket view screen with all available ticket information
-2. WHEN a user navigates to a ticket view URL with an invalid ticket ID, THE Ticket System SHALL display an error message indicating the ticket was not found
+1. WHEN an authenticated user navigates to a ticket view URL with a valid ticket ID, THE Ticket System SHALL display the ticket view screen with all available ticket information
+2. WHEN an authenticated user navigates to a ticket view URL with an invalid ticket ID, THE Ticket System SHALL display an error message indicating the ticket was not found
 3. THE Ticket System SHALL retrieve ticket data by calling the backend API endpoint `/api/tickets/{id:guid}` with the provided ticket ID
-4. THE Ticket System SHALL display a loading indicator while fetching ticket data from the server
+4. THE Ticket System SHALL include the authentication token from the HTTP-only cookie in API requests automatically via browser cookie handling
+5. THE Ticket System SHALL display a loading indicator while fetching ticket data from the server
+6. WHEN the authentication token is missing or invalid, THE Ticket System SHALL receive an HTTP 401 Unauthorized response from the backend API
+7. WHEN the user lacks authorization to view tickets, THE Ticket System SHALL receive an HTTP 403 Forbidden response from the backend API
 
 ### Requirement 2
 
@@ -88,3 +93,14 @@ This feature provides a dedicated ticket view screen that allows users to view c
 1. THE Ticket View Screen SHALL organize information into clearly labeled sections
 2. THE Ticket View Screen SHALL use consistent spacing and typography throughout the interface
 3. THE Ticket View Screen SHALL be responsive and display properly on different screen sizes
+
+### Requirement 8
+
+**User Story:** As a user, I want to be notified when I'm not authenticated or authorized to view tickets, so that I understand why I cannot access the ticket details.
+
+#### Acceptance Criteria
+
+1. WHEN the Ticket System receives an HTTP 401 Unauthorized response from the backend API, THE Ticket View Screen SHALL display an authentication error message
+2. WHEN the Ticket System receives an HTTP 403 Forbidden response from the backend API, THE Ticket View Screen SHALL display an authorization error message
+3. THE Ticket View Screen SHALL provide a link or button to navigate to the login page when authentication fails
+4. THE Ticket System SHALL rely on browser automatic cookie handling for authentication token transmission and SHALL NOT manually access or manipulate cookies via JavaScript

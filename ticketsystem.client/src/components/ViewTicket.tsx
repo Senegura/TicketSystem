@@ -53,7 +53,7 @@ const ViewTicket: React.FC = () => {
       // Handle authentication errors
       if (response.status === 401) {
         // Unauthorized - redirect to login
-        navigate('/login');
+        navigate('/');
         return;
       }
 

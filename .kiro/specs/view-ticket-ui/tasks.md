@@ -8,21 +8,22 @@
 
   - Create `ticketsystem.client/src/components/ViewTicket.tsx` with basic component structure
   - Add route `/tickets/:id` to `App.tsx` routing configuration
-  - Set up component state for ticket data, loading, and error states
+  - Set up component state for ticket data, loading, and error states (including authentication errors)
   - Implement `useParams` hook to extract ticket ID from URL
-  - _Requirements: 1.1, 1.3_
+  - _Requirements: 1.1, 1.3, 1.6, 1.7_
 - [x] 2. Implement API integration and data fetching
 
 
 
 
-- [ ] 2. Implement API integration and data fetching
+- [ ] 2. Implement API integration and data fetching with authentication
 
-  - Create `fetchTicket` function to call `/api/tickets/{id:guid}` endpoint
+  - Create `fetchTicket` function to call `/api/tickets/{id:guid}` endpoint with `credentials: 'include'` option
   - Implement `useEffect` hook to trigger data fetch on component mount
-  - Add error handling for 404, 500, and network errors
+  - Add error handling for 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 500 (Server Error), and network errors
   - Implement loading state management during API calls
-  - _Requirements: 1.1, 1.2, 1.3, 1.4_
+  - Ensure browser automatically includes HTTP-only authentication cookie in requests
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
 - [x] 3. Create ticket display layout and sections
 
 
@@ -50,18 +51,18 @@
   - _Requirements: 5.1, 5.2, 5.3_
 -
 
-- [x] 5. Create error and loading states UI
-
-
-
+- [ ] 5. Create error and loading states UI with authentication error handling
 
   - Implement loading spinner with "Loading ticket..." message
+  - Create error message component for authentication required (401) with "Go to Login" button
+  - Create error message component for access denied (403)
   - Create error message component for ticket not found (404)
   - Create error message component for server errors (500)
   - Create error message component for network errors
   - Add retry button functionality for recoverable errors
   - Add navigation link back to home/tickets list in error states
-  - _Requirements: 1.2, 1.4_
+  - Implement navigation to `/login` route when 401 error occurs
+  - _Requirements: 1.2, 1.4, 1.6, 1.7, 8.1, 8.2, 8.3_
 -
 
 - [x] 6. Implement ViewTicket component styling
