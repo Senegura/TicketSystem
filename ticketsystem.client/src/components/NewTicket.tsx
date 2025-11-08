@@ -7,6 +7,7 @@ const NewTicket: React.FC = () => {
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [issueDescription, setIssueDescription] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,6 +29,34 @@ const NewTicket: React.FC = () => {
     setIssueDescription(e.target.value);
     setError(''); // Clear error when user types
     setSuccess(''); // Clear success when user types
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5242880) {
+        setError('Image file size must not exceed 5MB');
+        setSuccess('');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Image file must be JPEG, PNG, or GIF');
+        setSuccess('');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+      
+      setImage(file);
+      setError('');
+      setSuccess('');
+    } else {
+      setImage(null);
+    }
   };
 
   const handleBackToLogin = () => {
@@ -54,6 +83,11 @@ const NewTicket: React.FC = () => {
       formData.append('fullName', fullName);
       formData.append('email', email);
       formData.append('issueDescription', issueDescription);
+      
+      // Add image if present
+      if (image) {
+        formData.append('image', image);
+      }
 
       const response = await fetch(API_ENDPOINTS.TICKETS.CREATE, {
         method: 'POST',
@@ -68,6 +102,10 @@ const NewTicket: React.FC = () => {
         setFullName('');
         setEmail('');
         setIssueDescription('');
+        setImage(null);
+        // Clear file input
+        const fileInput = document.getElementById('image') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
       } else if (response.status === 400) {
         // Handle 400 Bad Request
         try {
@@ -150,6 +188,22 @@ const NewTicket: React.FC = () => {
                 onChange={handleIssueDescriptionChange}
                 rows={5}
               />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="image" className="form-label">
+                Image (Optional)
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="image"
+                name="image"
+                accept="image/jpeg,image/png,image/gif"
+                onChange={handleImageChange}
+              />
+              <small className="form-text text-muted">
+                Max file size: 5MB. Allowed formats: JPEG, PNG, GIF
+              </small>
             </div>
             <button 
               type="submit" 
