@@ -57,4 +57,27 @@ public class TicketService : ITicketService
     {
         return await _ticketDal.GetAllAsync();
     }
+
+    /// <summary>
+    /// Retrieves a single ticket by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the ticket to retrieve.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the ticket if found, or null if not found.</returns>
+    public async Task<Ticket?> GetTicketByIdAsync(Guid id)
+    {
+        return await _ticketDal.GetByIdAsync(id);
+    }
+
+    /// <summary>
+    /// Updates an existing ticket with the provided information.
+    /// Sets the UpdatedAt timestamp to the current UTC time.
+    /// </summary>
+    /// <param name="ticket">The ticket object containing updated information.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the updated ticket if successful, or null if the ticket was not found.</returns>
+    public async Task<Ticket?> UpdateTicketAsync(Ticket ticket)
+    {
+        ticket.UpdatedAt = DateTime.UtcNow;
+        var success = await _ticketDal.UpdateAsync(ticket);
+        return success ? ticket : null;
+    }
 }

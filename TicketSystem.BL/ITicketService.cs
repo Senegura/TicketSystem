@@ -22,4 +22,18 @@ public interface ITicketService
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains a collection of all tickets in the system.</returns>
     Task<IEnumerable<Ticket>> GetAllTicketsAsync();
+
+    /// <summary>
+    /// Retrieves a single ticket by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the ticket to retrieve.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the ticket if found, or null if not found.</returns>
+    Task<Ticket?> GetTicketByIdAsync(Guid id);
+
+    /// <summary>
+    /// Updates an existing ticket with the provided information.
+    /// </summary>
+    /// <param name="ticket">The ticket object containing updated information.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the updated ticket if successful, or null if the ticket was not found.</returns>
+    Task<Ticket?> UpdateTicketAsync(Ticket ticket);
 }

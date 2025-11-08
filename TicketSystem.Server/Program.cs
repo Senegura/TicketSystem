@@ -105,6 +105,81 @@ async Task<string> SaveUploadedFileAsync(IFormFile file)
     return uniqueFileName;
 }
 
+// Authentication and authorization helper
+async Task<(bool isAuthorized, IResult? errorResult)> ValidateAuthenticationAsync(
+    HttpContext httpContext,
+    IConfiguration configuration)
+{
+    // Extract JWT token from AuthToken cookie
+    var cookieName = configuration.GetValue<string>("Authentication:CookieName") ?? "AuthToken";
+    var token = httpContext.Request.Cookies[cookieName];
+    
+    // Return unauthorized if token is missing or empty
+    if (string.IsNullOrWhiteSpace(token))
+    {
+        return (false, Results.Unauthorized());
+    }
+    
+    // Get secret key for token validation
+    var secretKey = configuration.GetValue<string>("Authentication:SecretKey");
+    if (string.IsNullOrWhiteSpace(secretKey))
+    {
+        Console.Error.WriteLine("Authentication:SecretKey is not configured");
+        return (false, Results.Unauthorized());
+    }
+    
+    // Validate token using JwtSecurityTokenHandler
+    var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+    var key = System.Text.Encoding.UTF8.GetBytes(secretKey);
+    
+    var validationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+        ValidateIssuer = true,
+        ValidIssuer = "TicketSystem",
+        ValidateAudience = true,
+        ValidAudience = "TicketSystemUsers",
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+    
+    ClaimsPrincipal? claimsPrincipal;
+    try
+    {
+        claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
+    }
+    catch (Exception)
+    {
+        // Token validation failed - return unauthorized
+        return (false, Results.Unauthorized());
+    }
+    
+    // Extract userType claim from validated token
+    var userTypeClaim = claimsPrincipal.FindFirst("userType");
+    
+    // Return forbidden if userType claim is missing
+    if (userTypeClaim == null)
+    {
+        return (false, Results.Forbid());
+    }
+    
+    // Return forbidden if userType claim cannot be parsed
+    if (!int.TryParse(userTypeClaim.Value, out int userType))
+    {
+        return (false, Results.Forbid());
+    }
+    
+    // Return forbidden if userType is not 1 (User) or 2 (Admin)
+    if (userType != 1 && userType != 2)
+    {
+        return (false, Results.Forbid());
+    }
+    
+    // Authentication and authorization succeeded
+    return (true, null);
+}
+
 // Login endpoint
 app.MapPost("/api/auth/login", async (
     LoginRequest? request,
@@ -369,6 +444,90 @@ app.MapGet("/api/tickets", async (
     }
 })
 .RequireCors("AllowFrontend"); // Sub-task 4.6: Add CORS policy to endpoint
+
+// Get ticket by ID endpoint with authentication and authorization
+app.MapGet("/api/tickets/{id:guid}", async (
+    Guid id,
+    HttpContext httpContext,
+    ITicketService ticketService,
+    IConfiguration configuration) =>
+{
+    try
+    {
+        // Sub-task 4.2: Add authentication and authorization logic
+        var (isAuthorized, errorResult) = await ValidateAuthenticationAsync(httpContext, configuration);
+        
+        if (!isAuthorized)
+        {
+            return errorResult!;
+        }
+        
+        // Sub-task 4.3: Implement ticket retrieval logic
+        var ticket = await ticketService.GetTicketByIdAsync(id);
+        
+        if (ticket == null)
+        {
+            return Results.NotFound();
+        }
+        
+        return Results.Ok(ticket);
+    }
+    catch (Exception ex)
+    {
+        // Sub-task 4.4: Add error handling with try-catch block
+        Console.Error.WriteLine($"Error retrieving ticket: {ex.Message}");
+        return Results.Problem("An error occurred while retrieving the ticket", statusCode: 500);
+    }
+})
+.RequireCors("AllowFrontend"); // Sub-task 4.5: Add CORS policy to endpoint
+
+// Update ticket by ID endpoint with authentication and authorization
+app.MapPut("/api/tickets/{id:guid}", async (
+    Guid id,
+    Ticket? ticket,
+    HttpContext httpContext,
+    ITicketService ticketService,
+    IConfiguration configuration) =>
+{
+    try
+    {
+        // Sub-task 5.2: Add authentication and authorization logic
+        var (isAuthorized, errorResult) = await ValidateAuthenticationAsync(httpContext, configuration);
+        
+        if (!isAuthorized)
+        {
+            return errorResult!;
+        }
+        
+        // Sub-task 5.3: Implement request validation logic
+        if (ticket == null)
+        {
+            return Results.BadRequest(new { error = "Ticket data is required" });
+        }
+        
+        if (id != ticket.Id)
+        {
+            return Results.BadRequest(new { error = "Ticket ID in URL does not match ticket ID in request body" });
+        }
+        
+        // Sub-task 5.4: Implement ticket update logic
+        var updatedTicket = await ticketService.UpdateTicketAsync(ticket);
+        
+        if (updatedTicket == null)
+        {
+            return Results.NotFound();
+        }
+        
+        return Results.Ok(updatedTicket);
+    }
+    catch (Exception ex)
+    {
+        // Sub-task 5.5: Add error handling with try-catch block
+        Console.Error.WriteLine($"Error updating ticket: {ex.Message}");
+        return Results.Problem("An error occurred while updating the ticket", statusCode: 500);
+    }
+})
+.RequireCors("AllowFrontend"); // Sub-task 5.6: Add CORS policy to endpoint
 
 app.MapFallbackToFile("/index.html");
 
