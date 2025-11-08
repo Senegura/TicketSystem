@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
 
 namespace TicketSystem.BL
 {
@@ -10,12 +11,20 @@ namespace TicketSystem.BL
     /// </summary>
     public class JwtService : IJwtService
     {
-        // Hard-coded secret key for signing tokens (256-bit cryptographically strong key)
-        private const string SecretKey = "Kj8mN2pQ4rT6wY9zB3cF5gH7jK0lM3nP6qS8tV1xZ4aC";
+        private readonly IConfiguration _configuration;
         
         // Default token configuration
         private const string Issuer = "TicketSystem";
         private const string Audience = "TicketSystemUsers";
+
+        /// <summary>
+        /// Initializes a new instance of the JwtService class
+        /// </summary>
+        /// <param name="configuration">Configuration instance to read secret key</param>
+        public JwtService(IConfiguration configuration)
+        {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
 
         /// <summary>
         /// Signs a JWT token with the provided claims and expiration time
@@ -25,8 +34,12 @@ namespace TicketSystem.BL
         /// <returns>Signed JWT token as a string</returns>
         public string SignToken(IEnumerable<Claim> claims, int expiresInMinutes = 60)
         {
+            // Read secret key from configuration
+            var secretKey = _configuration["Authentication:SecretKey"] 
+                ?? throw new InvalidOperationException("Authentication:SecretKey is not configured");
+            
             // Convert secret key to byte array and create SymmetricSecurityKey
-            var keyBytes = Encoding.UTF8.GetBytes(SecretKey);
+            var keyBytes = Encoding.UTF8.GetBytes(secretKey);
             var securityKey = new SymmetricSecurityKey(keyBytes);
 
             // Create SigningCredentials with HMAC-SHA256 algorithm

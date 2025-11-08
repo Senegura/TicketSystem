@@ -48,4 +48,13 @@ public class TicketService : ITicketService
 
         return createdTicket;
     }
+
+    /// <summary>
+    /// Retrieves all tickets from the system.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a collection of all tickets.</returns>
+    public async Task<IEnumerable<Ticket>> GetAllTicketsAsync()
+    {
+        return await _ticketDal.GetAllAsync();
+    }
 }

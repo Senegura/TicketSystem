@@ -16,4 +16,10 @@ public interface ITicketService
     /// <param name="imageFileName">The optional filename of an uploaded image associated with the ticket.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the created ticket with assigned Id and timestamps.</returns>
     Task<Ticket> CreateTicketAsync(string fullName, string email, string description, string? imageFileName);
+
+    /// <summary>
+    /// Retrieves all tickets from the system.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a collection of all tickets in the system.</returns>
+    Task<IEnumerable<Ticket>> GetAllTicketsAsync();
 }

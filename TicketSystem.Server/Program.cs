@@ -286,6 +286,90 @@ app.MapPost("/api/tickets", async (
 })
 .RequireCors("AllowFrontend");
 
+// Get all tickets endpoint with authentication and authorization
+app.MapGet("/api/tickets", async (
+    HttpContext httpContext,
+    ITicketService ticketService,
+    IConfiguration configuration) =>
+{
+    try
+    {
+        // Sub-task 4.1: Extract JWT token from AuthToken cookie
+        var cookieName = configuration.GetValue<string>("Authentication:CookieName") ?? "AuthToken";
+        var token = httpContext.Request.Cookies[cookieName];
+        
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return Results.Unauthorized();
+        }
+        
+        // Sub-task 4.2: Implement JWT token validation logic
+        var secretKey = configuration.GetValue<string>("Authentication:SecretKey");
+        if (string.IsNullOrWhiteSpace(secretKey))
+        {
+            Console.Error.WriteLine("Authentication:SecretKey is not configured");
+            return Results.Problem("Authentication configuration error", statusCode: 500);
+        }
+        
+        var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+        var key = System.Text.Encoding.UTF8.GetBytes(secretKey);
+        
+        var validationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidIssuer = "TicketSystem",
+            ValidateAudience = true,
+            ValidAudience = "TicketSystemUsers",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+        
+        ClaimsPrincipal? claimsPrincipal;
+        try
+        {
+            claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
+        }
+        catch (Exception)
+        {
+            // Token is invalid or expired
+            return Results.Unauthorized();
+        }
+        
+        // Sub-task 4.3: Implement role-based authorization logic
+        var userTypeClaim = claimsPrincipal.FindFirst("userType");
+        
+        if (userTypeClaim == null)
+        {
+            return Results.Forbid();
+        }
+        
+        if (!int.TryParse(userTypeClaim.Value, out int userType))
+        {
+            return Results.Forbid();
+        }
+        
+        // Allow access only for User (1) or Admin (2)
+        if (userType != 1 && userType != 2)
+        {
+            return Results.Forbid();
+        }
+        
+        // Sub-task 4.4: Implement ticket retrieval and response handling
+        var tickets = await ticketService.GetAllTicketsAsync();
+        
+        return Results.Ok(tickets);
+    }
+    catch (Exception ex)
+    {
+        // Sub-task 4.5: Implement error handling for exceptions
+        Console.Error.WriteLine($"Error retrieving tickets: {ex.Message}");
+        return Results.Problem("An error occurred while retrieving tickets", statusCode: 500);
+    }
+})
+.RequireCors("AllowFrontend"); // Sub-task 4.6: Add CORS policy to endpoint
+
 app.MapFallbackToFile("/index.html");
 
 app.Run();
