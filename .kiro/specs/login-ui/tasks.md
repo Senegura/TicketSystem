@@ -74,3 +74,77 @@
   - Test layout on desktop viewport (> 768px)
   - Verify form renders correctly in portrait and landscape orientations
   - _Requirements: 5.2, 5.3, 5.6_
+
+- [x] 7. Add API integration types and interfaces
+
+
+
+
+
+  - Create TypeScript interfaces for LoginRequest and LoginResponse in Login.tsx
+  - Define UserType type union ('Customer' | 'User' | 'Admin')
+  - _Requirements: 6.1, 6.2, 6.3, 7.1, 7.2, 7.3_
+-
+
+- [x] 8. Implement error state and loading state
+
+
+
+
+  - Add error state to Login component using useState
+  - Add isLoading state to Login component using useState
+  - Add error message display above the form using Bootstrap alert component
+  - Update login button to show loading state and disable during API call
+  - Clear error when user types in input fields
+  - _Requirements: 6.4, 6.5, 6.6, 7.5_
+-
+
+- [x] 9. Implement login API call handler
+
+
+
+
+  - Create handleSubmit function for form submission
+  - Prevent default form submission behavior
+  - Validate username and password are not empty
+  - Make POST request to /api/auth/login with credentials: 'include'
+  - Handle 200 OK response and extract token, userId, and userType
+  - Handle 400, 401, and other error responses with appropriate error messages
+  - Set loading state before and after API call
+  - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 7.4_
+- [x] 10. Implement navigation based on UserType
+
+
+
+
+- [ ] 10. Implement navigation based on UserType
+
+  - Import useNavigate hook from react-router-dom
+  - Create navigation logic that checks UserType from response
+  - Navigate to /create-ticket for Customer users
+  - Navigate to /tickets for User and Admin users
+  - Clear error message on successful authentication
+  - _Requirements: 7.1, 7.2, 7.3, 7.5_
+- [x] 11. Add placeholder routes for future screens
+
+
+
+
+- [ ] 11. Add placeholder routes for future screens
+
+  - Add /create-ticket route in App.tsx with placeholder component
+  - Add /tickets route in App.tsx with placeholder component
+  - Display "Coming Soon" messages for placeholder routes
+  - _Requirements: 7.1, 7.2, 7.3_
+-
+
+- [x] 12. Update form to use username instead of email
+
+
+
+
+  - Change email state variable to username
+  - Update label text from "Email address" to "Username"
+  - Update input field id and name attributes
+  - Ensure consistency with server API expectations
+  - _Requirements: 6.1, 6.2_

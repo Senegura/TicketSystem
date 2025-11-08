@@ -14,6 +14,22 @@ function App() {
                     </div>
                 </div>
             } />
+            <Route path="/create-ticket" element={
+                <div className="container mt-5">
+                    <div className="text-center">
+                        <h1>Create Ticket</h1>
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            } />
+            <Route path="/tickets" element={
+                <div className="container mt-5">
+                    <div className="text-center">
+                        <h1>View Tickets</h1>
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            } />
         </Routes>
     );
 }

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TicketSystem.Models;
 
 /// <summary>
@@ -17,6 +19,8 @@ public class LoginResponse
 
     /// <summary>
     /// Gets or sets the authenticated user's type.
+    /// Serialized as a string instead of an integer.
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public UserType UserType { get; set; }
 }

@@ -19,10 +19,12 @@ App.tsx (Root)
 
 ### Routing Strategy
 
-Since this is a UI-only implementation without business logic, we will:
-- Replace the current App.tsx content with the Login component as the initial view
-- Add a placeholder navigation structure for the Register link (route will be defined but component implementation is deferred)
-- Use React Router DOM for client-side routing (to be installed)
+The application will use React Router DOM for navigation:
+- Login component at "/" route (initial view)
+- Register route at "/register" (placeholder for future implementation)
+- Create tickets route at "/create-ticket" (placeholder for Customer users)
+- View tickets route at "/tickets" (placeholder for User and Admin users)
+- Navigation occurs after successful authentication based on UserType
 
 ### File Structure
 
@@ -44,33 +46,50 @@ ticketsystem.client/src/
 
 **File:** `src/components/Login.tsx`
 
-**Purpose:** Renders the login screen UI with form inputs and navigation
+**Purpose:** Renders the login screen UI with form inputs, handles authentication, and navigates based on user type
 
-**Props:** None (stateless UI component for now)
+**Props:** None
 
 **State:**
-- `email: string` - Controlled input for email field
+- `username: string` - Controlled input for username/email field
 - `password: string` - Controlled input for password field
+- `error: string` - Error message to display when authentication fails
+- `isLoading: boolean` - Loading state during API call
 
 **Key Features:**
 - Controlled form inputs using React useState
-- Event handlers for input changes (no submission logic yet)
-- Navigation to register route using React Router
+- Form submission handler that calls the login API endpoint
+- Error message display for authentication failures
+- Navigation based on UserType using React Router
 - Responsive layout using Bootstrap grid system
 
 **Component Structure:**
 ```typescript
 interface LoginProps {}
 
+interface LoginResponse {
+  token: string;
+  userId: number;
+  userType: 'Customer' | 'User' | 'Admin';
+}
+
 const Login: React.FC<LoginProps> = () => {
-  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   
-  // Event handlers for controlled inputs
-  // Navigation handler for register link
+  const handleSubmit = async (e: React.FormEvent) => {
+    // Prevent default form submission
+    // Clear previous errors
+    // Validate inputs
+    // Call API endpoint
+    // Handle response and navigate
+  };
   
   return (
-    // JSX structure
+    // JSX structure with error display
   );
 };
 ```
@@ -94,26 +113,115 @@ const Login: React.FC<LoginProps> = () => {
 
 ## Data Models
 
-### Form State Interface
+### Login Request
 
 ```typescript
-interface LoginFormState {
-  email: string;
+interface LoginRequest {
+  username: string;
   password: string;
 }
 ```
 
-No backend data models are needed for this UI-only implementation.
+### Login Response
+
+```typescript
+interface LoginResponse {
+  token: string;
+  userId: number;
+  userType: 'Customer' | 'User' | 'Admin';
+}
+```
+
+### UserType Enum
+
+The UserType values from the server response:
+- `'Customer'` - Regular customer users who create support tickets
+- `'User'` - Support staff who view and manage tickets
+- `'Admin'` - Administrators who view and manage tickets with elevated permissions
+
+## API Integration
+
+### Login Endpoint
+
+**URL:** `/api/auth/login`  
+**Method:** POST  
+**Content-Type:** application/json
+
+**Request Body:**
+```json
+{
+  "username": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "userId": 123,
+  "userType": "Customer"
+}
+```
+
+**Error Responses:**
+- **400 Bad Request:** Missing username or password
+- **401 Unauthorized:** Invalid credentials
+- **500 Internal Server Error:** Server error
+
+**Cookie Behavior:**
+The server automatically sets an HTTP-only cookie named "AuthToken" upon successful authentication. The browser will automatically include this cookie in subsequent requests to the same domain. No client-side cookie management is required.
+
+### Fetch Configuration
+
+API calls must include credentials to allow the browser to send and receive cookies:
+
+```typescript
+fetch('/api/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  credentials: 'include', // Important: allows cookies to be sent/received
+  body: JSON.stringify({ username, password })
+})
+```
 
 ## Error Handling
 
-Since this is a UI-only implementation without business logic:
-- No form validation is implemented yet
-- No error messages are displayed
-- Input fields accept any text without validation
-- Button click handlers are placeholders (no-op functions)
+### Client-Side Validation
 
-Error handling will be added in future iterations when authentication logic is implemented.
+Before making the API call:
+- Check if username and password fields are not empty
+- Display error message if either field is empty
+
+### API Error Handling
+
+The component will handle different HTTP status codes:
+
+**400 Bad Request:**
+- Display: "Username and password are required"
+
+**401 Unauthorized:**
+- Display: "Invalid username or password"
+
+**Network Errors or Other Status Codes:**
+- Display: "An error occurred during login. Please try again."
+
+### Error Display
+
+- Error messages will be displayed above the form in a Bootstrap alert component
+- Error styling: Red text or Bootstrap danger alert
+- Errors will be cleared when:
+  - User starts typing in either input field
+  - Successful authentication occurs
+  - User clicks the login button again (new attempt)
+
+### Loading State
+
+- Disable the login button while the API request is in progress
+- Show loading indicator (text change or spinner) on the button
+- Prevent multiple simultaneous login attempts
 
 ## Implementation Notes
 
@@ -178,15 +286,42 @@ Based on the provided design mockup:
 - Touch targets minimum 44x44px for mobile
 - Keyboard navigation support (native form elements)
 
+### Navigation Logic
+
+After successful authentication, the component will navigate based on UserType:
+
+```typescript
+const handleLoginSuccess = (response: LoginResponse) => {
+  setError('');
+  
+  switch (response.userType) {
+    case 'Customer':
+      navigate('/create-ticket');
+      break;
+    case 'User':
+    case 'Admin':
+      navigate('/tickets');
+      break;
+    default:
+      setError('Unknown user type');
+  }
+};
+```
+
+### Placeholder Routes
+
+The following routes will be defined in App.tsx but will show placeholder content:
+- `/create-ticket` - "Create Ticket (Coming Soon)" message
+- `/tickets` - "View Tickets (Coming Soon)" message
+
+These routes will be implemented in future specs.
+
 ### Future Enhancements (Out of Scope)
 
 The following will be implemented in future iterations:
-- Form validation (email format, password requirements)
-- Authentication business logic
-- API integration for login
-- Error message display
-- Loading states
+- Advanced form validation (email format, password requirements)
 - "Remember me" checkbox
 - "Forgot password" link
-- Success/failure feedback
-- Session management
+- Session timeout handling
+- Token refresh logic
+- Logout functionality
