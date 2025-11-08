@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import NewTicket from './components/NewTicket';
+import ViewTicket from './components/ViewTicket';
+import ViewTickets from './components/ViewTickets';
 import './App.css';
 
 function App() {
@@ -24,14 +26,8 @@ function App() {
                     </div>
                 </div>
             } />
-            <Route path="/tickets" element={
-                <div className="container mt-5">
-                    <div className="text-center">
-                        <h1>View Tickets</h1>
-                        <p>Coming Soon</p>
-                    </div>
-                </div>
-            } />
+            <Route path="/tickets" element={<ViewTickets />} />
+            <Route path="/tickets/:id" element={<ViewTicket />} />
         </Routes>
     );
 }

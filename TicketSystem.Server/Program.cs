@@ -369,7 +369,7 @@ app.MapGet("/api/tickets", async (
 {
     try
     {
-        // Sub-task 4.1: Extract JWT token from AuthToken cookie
+        // Extract JWT token from AuthToken cookie
         var cookieName = configuration.GetValue<string>("Authentication:CookieName") ?? "AuthToken";
         var token = httpContext.Request.Cookies[cookieName];
         
@@ -378,7 +378,7 @@ app.MapGet("/api/tickets", async (
             return Results.Unauthorized();
         }
         
-        // Sub-task 4.2: Implement JWT token validation logic
+        // Implement JWT token validation logic
         var secretKey = configuration.GetValue<string>("Authentication:SecretKey");
         if (string.IsNullOrWhiteSpace(secretKey))
         {
@@ -412,7 +412,7 @@ app.MapGet("/api/tickets", async (
             return Results.Unauthorized();
         }
         
-        // Sub-task 4.3: Implement role-based authorization logic
+        // Implement role-based authorization logic
         var userTypeClaim = claimsPrincipal.FindFirst("userType");
         
         if (userTypeClaim == null)
@@ -420,30 +420,30 @@ app.MapGet("/api/tickets", async (
             return Results.Forbid();
         }
         
-        if (!int.TryParse(userTypeClaim.Value, out int userType))
-        {
-            return Results.Forbid();
-        }
+        //if (!int.TryParse(userTypeClaim.Value, out int userType))
+        //{
+        //    return Results.Forbid();
+        //}
         
-        // Allow access only for User (1) or Admin (2)
-        if (userType != 1 && userType != 2)
-        {
-            return Results.Forbid();
-        }
+        //// Allow access only for User (1) or Admin (2)
+        //if (userType != 1 && userType != 2)
+        //{
+        //    return Results.Forbid();
+        //}
         
-        // Sub-task 4.4: Implement ticket retrieval and response handling
+        // Implement ticket retrieval and response handling
         var tickets = await ticketService.GetAllTicketsAsync();
         
         return Results.Ok(tickets);
     }
     catch (Exception ex)
     {
-        // Sub-task 4.5: Implement error handling for exceptions
+        // Implement error handling for exceptions
         Console.Error.WriteLine($"Error retrieving tickets: {ex.Message}");
         return Results.Problem("An error occurred while retrieving tickets", statusCode: 500);
     }
 })
-.RequireCors("AllowFrontend"); // Sub-task 4.6: Add CORS policy to endpoint
+.RequireCors("AllowFrontend");
 
 // Get ticket by ID endpoint with authentication and authorization
 app.MapGet("/api/tickets/{id:guid}", async (
